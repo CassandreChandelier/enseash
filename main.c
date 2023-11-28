@@ -3,8 +3,11 @@
 #include <string.h>
 #include <unistd.h>
 
-#include "functions.c"
+#define WELCOME "Welcome to ENSEA Tiny Shell\r\nType 'exit' to quit\r\nenseash % "
 
+void welcomeMessage(){
+        write(1, WELCOME, sizeof(WELCOME)) ;
+}
 
 int main(void){
 
@@ -12,3 +15,5 @@ int main(void){
 
         return EXIT_SUCCESS ;
 }
+
+
