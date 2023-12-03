@@ -1,10 +1,12 @@
+
 #include <stdlib.h>
 #include <stdio.h>
 #include <string.h>
 #include <unistd.h>
 #include <sys/wait.h>
 
-#define PROMPT "enseash % "
+#define ENSEASH "enseash "
+#define PROMPT ENSEASH"% "
 #define WELCOME "Welcome to ENSEA Tiny Shell\r\nType 'exit' to quit\r\n"PROMPT
 #define EXITMESSAGE "Bye bye...\r\n"
 
@@ -26,9 +28,26 @@ void executionCommand(char *command) {
 		exit(1);
 
 	} else { //parent
-      		waitpid(childPid, NULL, 0);
+		int status;
+      		waitpid(childPid, &status, 0);
+
+		if (WIFEXITED(status)){ //return code
+			char statusMessage[NBYTES];
+			prompt(ENSEASH);
+			sprintf(statusMessage,"[exit: %d]",WEXITSTATUS(status));
+			write(STDOUT_FILENO,statusMessage,strlen(statusMessage));
+			prompt(" % ");
+		}
+
+		else if (WIFSIGNALED(status)){//return signal if end of son because of signal
+			char statusMessage[NBYTES];
+			prompt(ENSEASH);
+			sprintf(statusMessage,"[sig: %d]",WTERMSIG(status));
+			write(STDOUT_FILENO,statusMessage,strlen(statusMessage));
+			prompt(" % ");
+
+		}
 	}
-	prompt(PROMPT);
 }
 
 
