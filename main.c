@@ -10,12 +10,13 @@
 #define PROMPT ENSEASH"% "
 #define WELCOME "Welcome to ENSEA Tiny Shell\r\nType 'exit' to quit\r\n"PROMPT
 #define EXITMESSAGE "Bye bye...\r\n"
+#define ERROR "Error\n"
 
 
 #define NBYTES 128
 #define MILLION 1000000.0
 
-void prompt(char *message){ write(1,message,strlen(message));}
+void prompt(char *message){write(1,message,strlen(message));}
 
 void welcomeMessage(){prompt(WELCOME);}
 
@@ -44,7 +45,8 @@ void executionCommand(char *command) {
 
 	if (childPid == 0) { //son
 
-		execlp(command, command, (char *)NULL);
+//		execlp(command, command, (char *)NULL);
+		execvp(command,**command);
 
 		perror("execlp");
 		exit(1);
@@ -75,20 +77,28 @@ int main(void){
 
 		input = read(STDIN_FILENO,command, sizeof(command));
 
-		if (input == -1 || input == 0) {
+		if (input == -1 || input == 0) { //verify if the user did <ctl>+D
 			write(STDERR_FILENO, EXITMESSAGE, sizeof(EXITMESSAGE));
 			exit(EXIT_FAILURE);
 		}
 
-		command[input-1]='\0';
+		command[input-1]='\0'; //change \n by \0
+
+		const char * separators = " ,.-!";
+		char * strToken = strtok(command,separators);
+		while (strToken != NULL) {
+			strToken = strtok(NULL,separators);
+		}
+
 
 		if (strcmp(command,"exit")==0){
 			write(STDOUT_FILENO,EXITMESSAGE,sizeof(EXITMESSAGE));
 			exit(EXIT_SUCCESS);
 		}
 
+
 		executionCommand(command);
+
 	}
 	return EXIT_SUCCESS;
 }
-

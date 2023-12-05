@@ -59,3 +59,9 @@ timespec *end);
 ```
 
 Then it can return WIFEXITED or WIFSIGNAL.
+
+## Question 6
+
+We had a function which cut a characters chain with columns. Then we can select the 
+first term and execute it.
+We didn't have the time to find the way to understand a complex command.
