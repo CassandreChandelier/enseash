@@ -47,7 +47,7 @@ To use this function, we had to define a structure:
 struct timespec start, end;
 ```
 
-We use at the beginning of the function executionCommand by calling the structure (&start),
+We use it at the beginning of the function executionCommand by calling the structure (&start),
 and at the end of the execution (in the parent process) by calling the structure a last 
 time (&end). Then, we calculate the time elapsed.
 
